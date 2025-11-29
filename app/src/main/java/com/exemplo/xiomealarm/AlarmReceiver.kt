@@ -25,7 +25,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val serviceIntent = Intent(context, AlarmService::class.java)
 
         // 2. INICIA O SERVICE COMO FOREGROUND. Isso é crucial no Android 8.0+
-        // O ContextCompat.startForegroundService garante que o método correto seja chamado
+        // O ContextCompat.startForegroundService garante que o metodo correto seja chamado
         // dependendo da versão do Android, evitando erros de compatibilidade.
         ContextCompat.startForegroundService(context, serviceIntent)
     }
