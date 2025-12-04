@@ -13,3 +13,17 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Android builds
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+
+# Generated folders
+out/
+
+# Keystore (important!)
+*.jks
+*.keystore
