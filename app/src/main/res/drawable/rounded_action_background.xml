@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Cor de fundo para o Switch (Azul mais escuro) -->
+    <solid android:color="#03A9F4"/>
+    <!-- Bordas arredondadas -->
+    <corners android:radius="24dp"/>
+    <!-- Uma sombra leve -->
+    <padding android:left="8dp" android:top="8dp" android:right="8dp" android:bottom="8dp"/>
+</shape>

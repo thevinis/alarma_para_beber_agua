@@ -1,66 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D0D0D"
+    android:background="@color/background_light_blue"
     tools:context=".MainActivity">
 
+    <!-- 1. TÍTULO PRINCIPAL -->
     <TextView
         android:id="@+id/appTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:text="Alarme de Agua"
-        android:textColor="#4AE40E"
-        android:textSize="24sp"
+        android:text="Lembrete de Hidratação"
+        android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/primary_dark_blue"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"/>
 
+    <!-- 2. RASTREAMENTO E SELETORES -->
+    <LinearLayout
+        android:id="@+id/trackingContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/appTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="24dp">
+
+        <!-- Campo de Total Consumido -->
+        <TextView
+            android:id="@+id/totalConsumedTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/rounded_status_background_inactive"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Total Consumido Hoje: 0 ml"
+            android:textColor="@color/secondary_dark_teal"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Seletor de Intervalo de Tempo (Horas) -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_status_background_active"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <NumberPicker
+                android:id="@+id/timePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:solidColor="@color/background_light_blue" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="horas (Intervalo)"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Seletor de Volume Padrão (ML) -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_status_background_active"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <NumberPicker
+                android:id="@+id/volumePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:solidColor="@color/background_light_blue" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="ml (Volume Padrão)"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <!-- 3. STATUS DO ALARME -->
     <TextView
         android:id="@+id/statusText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/rounded_background"
-        android:gravity="center"
-        android:padding="16dp"
         android:text="Status: Alarme Inativo"
-        android:textColor="#4B5563"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appTitle" />
-
-    <Switch
-        android:id="@+id/alarmToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        android:textColor="@color/black"
         android:padding="16dp"
-        android:text="Ativar Alarme"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:background="@drawable/rounded_status_background_inactive"
+        android:elevation="4dp"
+        app:layout_constraintTop_toBottomOf="@id/trackingContainer"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:thumbTint="@color/white"
-        app:trackTint="@color/switch_track_color" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="32dp"
+        tools:text="Status: Alarme ATIVO (A cada 1 hora) 💧"/>
 
-    <TextView
-        android:id="@+id/textView2"
+    <!-- 4. BOTÃO/SWITCH DE ATIVAÇÃO -->
+    <LinearLayout
+        android:id="@+id/switchContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingEnd="50dp"
-        android:text="By thevinicios"
-        android:textColor="#E20808"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/rounded_action_background"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="24dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statusText">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="Ativar Lembrete"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Componente Switch, ID mudado para alarmSwitch -->
+        <Switch
+            android:id="@+id/alarmSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    </LinearLayout>
+
+    <!-- 5. Botão de Resetar Total -->
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/alert_red"
+        android:elevation="6dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:text="Zerar Consumo Diário"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:cornerRadius="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/switchContainer" />
+
+    <!-- 6. Texto de Agradecimento ou Marca -->
+    <TextView
+        android:id="@+id/footer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Criado por thevinis"
+        android:textColor="#607D8B"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="323dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

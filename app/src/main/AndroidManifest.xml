@@ -1,45 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- PERMISSÕES OBRIGATÓRIAS -->
+    <!-- PERMISSÕES NECESSÁRIAS -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- NOVO: Permissão para usar Foreground Service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- NOVO: Permissão específica para o tipo mediaPlayback (Necessário para Android 14+) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <!-- Permissão específica para o tipo 'alarm' a partir do Android 14 (API 34) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SCHEDULE_EXACT_ALARM" />
+    <!-- Opcional, mas recomendado para garantir que o alarme toque mesmo com restrições -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="AlarmReceiver"
+        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AlarmReceiver">
+        android:theme="@style/Theme.XiomeAlarm">
 
-        <!-- 1. REGISTRO DO RECEIVER -->
-        <receiver android:name=".AlarmReceiver" android:enabled="true" android:exported="true" />
-
-        <!-- 2. REGISTRO DO SERVICE -->
-        <service android:name=".AlarmService" android:exported="false" />
-
-        <!-- 3. REGISTRO DA ACTIVITY DE PARADA -->
-        <activity android:name=".AlarmStopActivity"
-            android:exported="false"
-            android:showOnLockScreen="true"
-            android:turnScreenOn="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-
-        <!-- 4. REGISTRO DA MAIN ACTIVITY -->
-        <activity android:name=".MainActivity"
-            android:exported="true">
+        <!-- 1. REGISTRO DA MAIN ACTIVITY -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-    </application>
+        <!-- 2. REGISTRO DA ACTIVITY DE PARADA (Alarme) -->
+        <activity
+            android:name=".ConsumeActivity"
+            android:exported="false"
+            android:showOnLockScreen="true"
+            android:turnScreenOn="true"
+            android:theme="@style/Theme.XiomeAlarm.FullScreen" />
 
+        <!-- 3. REGISTRO DO RECEIVER (Chamado pelo AlarmManager) -->
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <!-- 4. REGISTRO DO SERVICE (Para tocar o alarme em foreground) -->
+        <service
+            android:name=".AlarmService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
+    </application>
 </manifest>
