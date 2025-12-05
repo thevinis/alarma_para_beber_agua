@@ -13,6 +13,7 @@
     <!-- Opcional, mas recomendado para garantir que o alarme toque mesmo com restrições -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -49,11 +50,10 @@
             android:enabled="true"
             android:exported="true" />
 
-        <!-- 4. REGISTRO DO SERVICE (Para tocar o alarme em foreground) -->
         <service
-            android:name=".AlarmService"
-            android:exported="false"
-            android:foregroundServiceType="mediaPlayback" />
+            android:name=".AlarmAlertService"
+            android:foregroundServiceType="mediaPlayback|phoneCall"
+            android:exported="false" />
 
     </application>
 </manifest>

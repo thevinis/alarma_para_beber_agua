@@ -1,16 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Base application theme. Usando Material 3 por ser mais recente e flexível. -->
     <style name="Theme.XiomeAlarm" parent="Theme.Material3.DayNight.NoActionBar">
-
-        <!-- Primary brand color (Seu azul principal). -->
-        <item name="colorPrimary">@color/primary_water_blue</item>
-        <item name="colorPrimaryVariant">@color/primary_dark_blue</item>
-        <item name="colorOnPrimary">@color/on_primary</item>
-
-        <!-- Secondary brand color (Seu verde-água para ações positivas). -->
-        <item name="colorSecondary">@color/secondary_teal</item>
-        <item name="colorSecondaryVariant">@color/secondary_dark_teal</item>
-        <item name="colorOnSecondary">@color/on_secondary</item>
 
         <!-- Cor de Fundo Geral (Seu azul claro). -->
         <item name="android:colorBackground">@color/background_light_blue</item>
@@ -18,17 +9,12 @@
         <!-- Cor da Barra de Status. -->
         <item name="android:statusBarColor">@color/primary_dark_blue</item>
 
-        <!-- Cor de Erro (Laranja/Alerta) -->
-        <item name="colorError">@color/alert_orange</item>
-
-        <!-- Remove a ActionBar para um design mais limpo -->
+        !-- Remove a ActionBar para um design mais limpo -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
     <!-- Tema para a Tela de Alarme (FullScreen) -->
     <style name="Theme.XiomeAlarm.FullScreen" parent="Theme.XiomeAlarm">
-        <!-- Mantém o fundo laranja/alerta para esta Activity específica -->
-        <item name="android:windowBackground">@color/alert_orange</item>
     </style>
 </resources>

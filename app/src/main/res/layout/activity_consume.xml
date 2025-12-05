@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:background="@android:color/white"
-    android:layout_margin="16dp"
-    android:elevation="8dp">
-
-    <!-- ID Opcional, mas se estava no erro, vamos incluir -->
-    <TextView
-        android:id="@+id/dialogTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Lembrete de Hidratação!"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"
-        android:textColor="@color/black"/>
-
-    <!-- ID REQUERIDO: volumeTextView -->
-    <TextView
-        android:id="@+id/volumeTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:layout_marginBottom="24dp"
-        android:text="Volume Padrão: 300 ml"
-        android:textColor="@color/black"/>
+    android:layout_height="match_parent"
+    android:background="@color/accent_teal">
 
     <LinearLayout
+        android:orientation="vertical"
+        android:padding="24dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <!-- ID REQUERIDO: skipButton -->
-        <Button
-            android:id="@+id/skipButton"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/dialogTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="PULAR"
-            android:backgroundTint="@color/grey_light"
+            android:layout_marginBottom="16dp"
+            android:text="Lembrete de Hidratação!"
             android:textColor="@color/black"
-            android:layout_marginEnd="8dp"/>
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-        <!-- ID REQUERIDO: confirmButton -->
-        <Button
-            android:id="@+id/confirmButton"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/volumeTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="BEBI!"
-            android:backgroundTint="@color/green_success"
-            android:textColor="@android:color/white"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:text="Volume Padrão: 300 ml"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/skipButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/grey_light"
+                android:text="PULAR"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/confirmButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/green_success"
+                android:text="BEBI!"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

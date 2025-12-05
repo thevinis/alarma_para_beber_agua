@@ -230,7 +230,7 @@ class MainActivity : AppCompatActivity() {
         // Usa setExactAndAllowWhileIdle (PONTO CRÍTICO DE PRECISÃO)
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            System.currentTimeMillis() + intervalMs,
+            System.currentTimeMillis() + 60_000L,
             pendingIntent
         )
 
