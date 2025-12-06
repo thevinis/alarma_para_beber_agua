@@ -51,9 +51,9 @@
             android:exported="true" />
 
         <service
-            android:name=".AlarmAlertService"
-            android:foregroundServiceType="mediaPlayback|phoneCall"
-            android:exported="false" />
+            android:name=".AlarmService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
 
     </application>
 </manifest>

@@ -11,12 +11,12 @@ class AlarmReceiver : BroadcastReceiver() {
 
         // Pega os extras enviados pelo scheduler
         val intervalMs = intent.getLongExtra("EXTRA_INTERVAL_MS", 3600000L)
-        val volumeMl = intent.getIntExtra("EXTRA_DEFAULT_VOLUME_ML", 200)
+        val volumeMl = intent.getIntExtra("EXTRA_VOLUME_ML", 200)
 
         // Inicia o serviço responsável por:
         // - Som
         // - Vibração
-        // - Notificação "bonita"
+        // - Notificação
         // - Abrir a ConsumeActivity ao clicar
         // - Manter o alarme ativo corretamente
         val serviceIntent = Intent(context, AlarmService::class.java).apply {

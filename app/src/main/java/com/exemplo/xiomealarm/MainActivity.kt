@@ -22,15 +22,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import android.content.pm.PackageManager
+import androidx.lifecycle.lifecycleScope
 
 class MainActivity : AppCompatActivity() {
 
-    private val requestNotificationPermission =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-            if (!granted) {
-                Toast.makeText(this, "Permissão de notificação negada", Toast.LENGTH_SHORT).show()
-            }
-        }
+
 
 
     private lateinit var alarmManager: AlarmManager
@@ -83,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         volumePicker = findViewById(R.id.volumePicker)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
 
 
@@ -126,12 +122,17 @@ class MainActivity : AppCompatActivity() {
 
     // --- FUNÇÃO CRÍTICA PARA SOLICITAR PERMISSÃO DE NOTIFICAÇÃO (Android 13+) ---
     private fun requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13 (Tiramisu)
-            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
     }
+
 
     // Lançador de permissão para POST_NOTIFICATIONS
     private val requestPermissionLauncher =
@@ -230,7 +231,7 @@ class MainActivity : AppCompatActivity() {
         // Usa setExactAndAllowWhileIdle (PONTO CRÍTICO DE PRECISÃO)
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            System.currentTimeMillis() + 60_000L,
+            System.currentTimeMillis() + intervalMs,
             pendingIntent
         )
 

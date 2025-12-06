@@ -97,7 +97,7 @@ class AlarmService : Service() {
             .setContentText("Beba $volumeMl ml agora!")
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setAutoCancel(true)
+            .setOngoing(true)
             .build()
     }
 
