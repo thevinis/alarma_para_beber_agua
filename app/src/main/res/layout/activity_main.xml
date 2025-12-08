@@ -8,6 +8,8 @@
     android:background="@color/background_light_blue"
     tools:context=".MainActivity">
 
+
+
     <!-- 1. TÍTULO PRINCIPAL -->
     <TextView
         android:id="@+id/appTitle"

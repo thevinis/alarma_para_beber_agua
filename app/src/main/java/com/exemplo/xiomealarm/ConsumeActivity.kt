@@ -16,7 +16,6 @@ class ConsumeActivity : AppCompatActivity() {
 
     private val PREFS_NAME = "AlarmPrefs"
     private val KEY_TOTAL_CONSUMED_TODAY = "TotalConsumedToday"
-    private val NOTIFICATION_ID = 101
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,12 +23,12 @@ class ConsumeActivity : AppCompatActivity() {
 
         prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-        val volumeMl = intent.getIntExtra("EXTRA_VOLUME_ML", 300)
+        val volumeMl = intent.getIntExtra(AlarmService.EXTRA_VOLUME_ML, 300)
 
-        // =======================
-        // PARAR SOM / VIBRAÇÃO
-        // =======================
-        stopService(Intent(this, AlarmService::class.java))
+        // PARAR SOM / VIBRAÇÃO (para o serviço em foreground)
+        try {
+            stopService(Intent(this, AlarmService::class.java))
+        } catch (_: Exception) {}
 
         val volumeTextView: TextView = findViewById(R.id.volumeTextView)
         val confirmButton: Button = findViewById(R.id.confirmButton)
@@ -49,7 +48,6 @@ class ConsumeActivity : AppCompatActivity() {
         }
     }
 
-
     private fun registerConsumption(volume: Int) {
         val current = prefs.getInt(KEY_TOTAL_CONSUMED_TODAY, 0)
         val newTotal = current + volume
@@ -63,6 +61,6 @@ class ConsumeActivity : AppCompatActivity() {
 
     private fun clearNotification() {
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.cancel(NOTIFICATION_ID)
+        manager.cancel(AlarmService.NOTIFICATION_ID)
     }
 }

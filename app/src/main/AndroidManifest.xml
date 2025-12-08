@@ -2,18 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- PERMISSÕES NECESSÁRIAS -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!-- NOVO: Permissão específica para o tipo mediaPlayback (Necessário para Android 14+) -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
-    <!-- Permissão específica para o tipo 'alarm' a partir do Android 14 (API 34) -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SCHEDULE_EXACT_ALARM" />
-    <!-- Opcional, mas recomendado para garantir que o alarme toque mesmo com restrições -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
 
     <application
         android:allowBackup="true"
@@ -25,7 +19,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.XiomeAlarm">
 
-        <!-- 1. REGISTRO DA MAIN ACTIVITY -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -36,7 +29,11 @@
             </intent-filter>
         </activity>
 
-        <!-- 2. REGISTRO DA ACTIVITY DE PARADA (Alarme) -->
+        <activity
+            android:name=".FixPermissionsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ConsumeActivity"
             android:exported="false"
@@ -44,7 +41,6 @@
             android:turnScreenOn="true"
             android:theme="@style/Theme.XiomeAlarm.FullScreen" />
 
-        <!-- 3. REGISTRO DO RECEIVER (Chamado pelo AlarmManager) -->
         <receiver
             android:name=".AlarmReceiver"
             android:enabled="true"
@@ -53,7 +49,9 @@
         <service
             android:name=".AlarmService"
             android:exported="false"
-            android:foregroundServiceType="mediaPlayback" />
+            android:foregroundServiceType="specialUse"
+            tools:ignore="ForegroundServicePermission" />
+
 
     </application>
 </manifest>
