@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <application
         android:allowBackup="true"
@@ -46,11 +47,11 @@
             android:enabled="true"
             android:exported="true" />
 
+        <!-- 4. SERVIÇO DE ALARME (Toca som/vibra) -->
         <service
             android:name=".AlarmService"
             android:exported="false"
-            android:foregroundServiceType="specialUse"
-            tools:ignore="ForegroundServicePermission" />
+            android:foregroundServiceType="mediaPlayback" />
 
 
     </application>

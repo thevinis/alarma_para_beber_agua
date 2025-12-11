@@ -13,6 +13,7 @@ import android.os.Vibrator
 import android.os.IBinder
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.core.app.NotificationCompat
 
 class AlarmService : Service() {
@@ -23,8 +24,7 @@ class AlarmService : Service() {
         const val EXTRA_INTERVAL_MS = "EXTRA_INTERVAL_MS"
         const val EXTRA_VOLUME_ML = "EXTRA_VOLUME_ML"
 
-        // Tempo limite de execução do alarme (10 segundos)
-        private const val HANDLER_STOP_DELAY_MS = 20000L
+        private const val HANDLER_STOP_DELAY_MS = 40000L
     }
 
     private var ringtone: Ringtone? = null
@@ -33,11 +33,6 @@ class AlarmService : Service() {
 
     private var intervalMs: Long = 3600000L
     private var volumeMl: Int = 200
-
-    override fun onCreate() {
-        super.onCreate()
-    }
-
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
@@ -48,24 +43,43 @@ class AlarmService : Service() {
 
         createNotificationChannel()
 
-        // 1. Inicia o serviço em primeiro plano com a notificação
+        val nm = getSystemService(NotificationManager::class.java)
+        Log.i("AlarmService", "notificationsEnabled=${nm?.areNotificationsEnabled()}")
+        val ch = nm?.getNotificationChannel(CHANNEL_ID)
+        Log.i("AlarmService", "channel=${ch?.id} importance=${ch?.importance} name=${ch?.name}")
+
+
         startForeground(NOTIFICATION_ID, buildNotification())
 
-        // 2. Inicia o alarme IMEDIATAMENTE (crucial para Xiaomi/MIUI).
         startAlarmBehavior()
 
-        // 3. Agenda a interrupção do serviço após 10 segundos
         handler.postDelayed({
             stopAlarmBehavior()
             stopSelf()
-        }, 10000L)
+        }, HANDLER_STOP_DELAY_MS)
 
         return START_NOT_STICKY
     }
 
-    // ===============================================================
-    //   SOM / VIBRAÇÃO (Prioridade máxima com TYPE_ALARM)
-    // ===============================================================
+    // -------------------------------------------------------------
+    //     DETECÇÃO DE MIUI (Xiaomi / Redmi / Poco)
+    // -------------------------------------------------------------
+    private fun isXiaomi(): Boolean {
+        val manufacturer = Build.MANUFACTURER.lowercase()
+        val brand = Build.BRAND.lowercase()
+        val model = Build.MODEL.lowercase()
+
+        return manufacturer.contains("xiaomi") ||
+                brand.contains("xiaomi") ||
+                brand.contains("redmi") ||
+                brand.contains("poco") ||
+                model.contains("miui")
+    }
+
+
+    // -------------------------------------------------------------
+    //     ALARME (Ringtone + volume reduzido em Xiaomi)
+    // -------------------------------------------------------------
     private fun startAlarmBehavior() {
 
         val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -75,9 +89,8 @@ class AlarmService : Service() {
                 audioManager.ringerMode == AudioManager.RINGER_MODE_VIBRATE
 
         if (isSilent) {
-            // Vibração manual e imediata (máxima prioridade tátil)
+            // Vibração imediata para modo silencioso
             val pattern = longArrayOf(0L, 1200L, 800L)
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator?.vibrate(VibrationEffect.createWaveform(pattern, 0))
             } else {
@@ -85,28 +98,21 @@ class AlarmService : Service() {
                 vibrator?.vibrate(pattern, 0)
             }
 
-        }
-        else {
-            // Toca som de ALARME (máxima prioridade de áudio)
-            try {
-                val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-                ringtone = RingtoneManager.getRingtone(this, uri)
-                try {
-                    ringtone?.isLooping = true
-                } catch (_: Throwable) {}
-                ringtone?.play()
-            } catch (_: Exception) {
-                // fallback
-                try {
-                    val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-                    ringtone = RingtoneManager.getRingtone(this, uri)
-                    ringtone?.play()
-                } catch (_: Exception) {}
-            }
+        } else {
+            // Som de alarme
+            val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+            ringtone = RingtoneManager.getRingtone(this, uri)
+
+            try { ringtone?.isLooping = true } catch (_: Throwable) {}
+
+            ringtone?.play()
         }
     }
 
 
+    // -------------------------------------------------------------
+    //     NOTIFICAÇÃO (PRIORIDADE + FULLSCREEN INTENT)
+    // -------------------------------------------------------------
     private fun buildNotification(): Notification {
 
         val openIntent = Intent(this, ConsumeActivity::class.java).apply {
@@ -126,11 +132,12 @@ class AlarmService : Service() {
             .setContentTitle("Hora de beber água")
             .setContentText("Beba $volumeMl ml agora!")
             .setContentIntent(pendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_MAX) // 🚨 Prioridade de visualização máxima (Heads-up)
-            .setCategory(Notification.CATEGORY_ALARM) // 🚨 CATEGORIZAÇÃO: Trata a notificação como ALARME
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setCategory(Notification.CATEGORY_ALARM)
             .setOngoing(true)
-            .setVibrate(longArrayOf(0L))
+            .setVibrate(longArrayOf(0))
             .setSound(null)
+            .setFullScreenIntent(pendingIntent, true)   // 👈 HEADS-UP INSTANTÂNEO
             .build()
     }
 
@@ -140,26 +147,19 @@ class AlarmService : Service() {
         val channel = NotificationChannel(
             CHANNEL_ID,
             "Lembrete de Água",
-            NotificationManager.IMPORTANCE_HIGH // 🚨 Nível de importância máximo para o canal
+            NotificationManager.IMPORTANCE_HIGH
         )
         channel.setSound(null, null)
         channel.enableVibration(true)
+
         val manager = getSystemService(NotificationManager::class.java)
         manager?.createNotificationChannel(channel)
     }
 
-    // ===============================================================
-    //   PARAR SOM / VIBRAÇÃO
-    // ===============================================================
     private fun stopAlarmBehavior() {
-        try {
-            ringtone?.stop()
-        } catch (_: Exception) {}
-        try {
-            vibrator?.cancel()
-        } catch (_: Exception) {}
+        try { ringtone?.stop() } catch (_: Exception) {}
+        try { vibrator?.cancel() } catch (_: Exception) {}
     }
-
 
     override fun onDestroy() {
         handler.removeCallbacksAndMessages(null)

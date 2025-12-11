@@ -24,29 +24,30 @@
             android:id="@+id/btnPermNotificacoes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="✔ Permitir Notificações"
+            android:text="Permitir Notificações"
             android:layout_marginBottom="16dp"/>
 
         <Button
             android:id="@+id/btnPermAlarmes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="✔ Permitir Alarmes Exatos"
+            android:text="Permitir Alarmes Exatos"
             android:layout_marginBottom="16dp"/>
 
         <Button
             android:id="@+id/btnPermBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="✔ Permitir Executar em Segundo Plano"
+            android:text="Executar em Segundo Plano"
             android:layout_marginBottom="16dp"/>
 
         <Button
             android:id="@+id/btnPermXiaomi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="✔ Configurar no Xiaomi (Autostart / Bateria)"
+            android:text="Configurar no Xiaomi"
             android:layout_marginBottom="16dp"/>
+
 
     </LinearLayout>
 </ScrollView>

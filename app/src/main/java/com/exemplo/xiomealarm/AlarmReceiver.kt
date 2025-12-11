@@ -42,9 +42,9 @@ class AlarmReceiver : BroadcastReceiver() {
             putExtra(AlarmService.EXTRA_VOLUME_ML, volumeMl)
         }
 
-        // Use o mesmo RequestCode (0) que você usou em MainActivity, mas é importante
-        // garantir que este PendingIntent seja único. Se o MainActivity usar o código 0,
-        // ele pode estar sobrescrevendo, mas para o agendamento periódico, usaremos 1.
+
+
+
         val pending = PendingIntent.getBroadcast(
             context,
             1, //  o RequestCode '1' para evitar conflito com o cancelamento da MainActivity
