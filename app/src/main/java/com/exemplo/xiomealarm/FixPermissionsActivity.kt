@@ -52,7 +52,7 @@ class FixPermissionsActivity : AppCompatActivity() {
 
 
 
-    // isso detecta autostart APENAS nos Xiaomi mais antigos
+    // isso detecta autostart apenas nos Xiaomi mais antigos
     private fun isXiaomiAutostartEnabled(): Boolean {
         return try {
             val pm = packageManager
@@ -66,7 +66,7 @@ class FixPermissionsActivity : AppCompatActivity() {
 
     private fun refreshPermissionStatus() {
 
-        // ------------------- NOTIFICAÇÕES -------------------
+        // NOTIFICAÇÕES
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val granted = ContextCompat.checkSelfPermission(
                 this,
@@ -79,7 +79,7 @@ class FixPermissionsActivity : AppCompatActivity() {
                 "✘ Permitir Notificações"
         }
 
-        // ------------------- ALARME EXATO -------------------
+        // ALARME EXATO
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val alarmManager = getSystemService(AlarmManager::class.java)
             val granted = alarmManager.canScheduleExactAlarms()
@@ -90,7 +90,7 @@ class FixPermissionsActivity : AppCompatActivity() {
                 "✘ Permitir Alarmes Exatos"
         }
 
-        // ------------------- BACKGROUND -------------------
+        //  BACKGROUND
         val backgroundOk = isBackgroundAllowed()
 
 
@@ -99,7 +99,7 @@ class FixPermissionsActivity : AppCompatActivity() {
         else
             "✘ Executar em Segundo Plano"
 
-        // ------------------- XIAOMI AUTOSTART -------------------
+        // XIAOMI AUTOSTART
         val xiaomiOk = isXiaomiAutostartEnabled()
 
         btnXiaomi.text = if (xiaomiOk)
@@ -118,9 +118,9 @@ class FixPermissionsActivity : AppCompatActivity() {
         btnBackground = findViewById(R.id.btnPermBackground)
         btnXiaomi = findViewById(R.id.btnPermXiaomi)
 
-        // ------------------------------
-        // ✔ PERMISSÃO DE NOTIFICAÇÕES
-        // ------------------------------
+
+        //  PERMISSÃO DE NOTIFICAÇÕES
+
         btnNotificacao.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (ContextCompat.checkSelfPermission(
@@ -139,9 +139,9 @@ class FixPermissionsActivity : AppCompatActivity() {
 
         refreshPermissionStatus()
 
-        // ------------------------------
-        // ✔ PERMISSÃO DE ALARMES EXATOS
-        // ------------------------------
+
+        //  PERMISSÃO DE ALARMES EXATOS
+
         btnAlarmeExato.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 val alarmManager = getSystemService(AlarmManager::class.java)
@@ -163,9 +163,9 @@ class FixPermissionsActivity : AppCompatActivity() {
             }
         }
 
-        // ------------------------------
-        // ✔ PERMISSÃO DE EXECUTAR EM SEGUNDO PLANO
-        // ------------------------------
+
+        //  PERMISSÃO DE EXECUTAR EM SEGUNDO PLANO
+
         btnBackground.setOnClickListener {
             try {
                 val intent = Intent().apply {
@@ -177,9 +177,9 @@ class FixPermissionsActivity : AppCompatActivity() {
             }
         }
 
-        // ------------------------------
-        // ✔ CONFIGURAÇÕES ESPECIAIS PARA XIAOMI / REDMI / POCO
-        // ------------------------------
+
+        //  CONFIGURAÇÕES ESPECIAIS PARA XIAOMI / REDMI / POCO
+
         btnXiaomi.setOnClickListener {
             try {
                 val intent = Intent("miui.intent.action.OP_AUTO_START")

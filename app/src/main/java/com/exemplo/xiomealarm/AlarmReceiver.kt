@@ -47,7 +47,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val pending = PendingIntent.getBroadcast(
             context,
-            1, //  o RequestCode '1' para evitar conflito com o cancelamento da MainActivity
+            1, //  o RequestCode 1 para evitar conflito com o cancelamento da mainactivity
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )

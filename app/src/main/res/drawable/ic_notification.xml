@@ -4,7 +4,7 @@
     android:viewportWidth="24"
     android:viewportHeight="24">
 
-    <!-- Ícone de gota d’água -->
+    <!-- Ícone de gota dágua -->
     <path
         android:fillColor="#2196F3"
         android:pathData="M12,2C12,2 6,9 6,13C6,17.418 9.582,21 14,21C17.866,21 21,17.866 21,14C21,9 12,2 12,2z" />

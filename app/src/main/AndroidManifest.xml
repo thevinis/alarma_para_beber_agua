@@ -40,7 +40,9 @@
             android:exported="false"
             android:showOnLockScreen="true"
             android:turnScreenOn="true"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.XiomeAlarm.FullScreen" />
+
 
         <receiver
             android:name=".AlarmReceiver"
