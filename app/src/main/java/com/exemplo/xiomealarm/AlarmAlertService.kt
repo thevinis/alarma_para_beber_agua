@@ -20,24 +20,14 @@ class AlarmService : Service() {
         const val EXTRA_INTERVAL_MS = "EXTRA_INTERVAL_MS"
         const val EXTRA_VOLUME_ML = "EXTRA_VOLUME_ML"
 
-        private const val ALARM_DURATION_MS = 10_000L
-
         const val ACTION_STOP = "com.exemplo.xiomealarm.ACTION_STOP"
     }
 
     private var vibrator: Vibrator? = null
-    private var ringtone: Ringtone? = null
-    private val handler = Handler(Looper.getMainLooper())
 
     private var volumeMl: Int = 200
 
     private var mediaPlayer: MediaPlayer? = null
-
-
-
-
-
-    //     CICLO DE VIDA
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent == null) return START_NOT_STICKY
@@ -57,11 +47,8 @@ class AlarmService : Service() {
         playAlarmSoundIfAllowed()
         startVibrationIfSilent()
 
-
-
         return START_NOT_STICKY
     }
-
 
     //     TOCAR SOM FORA DO SILENCIOSO
 
@@ -75,17 +62,18 @@ class AlarmService : Service() {
         if (isSilent) return
 
         mediaPlayer = MediaPlayer.create(this, Settings.System.DEFAULT_ALARM_ALERT_URI)
-        mediaPlayer?.setAudioAttributes(
-            AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_ALARM)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build()
-        )
 
-        mediaPlayer?.isLooping = false
-        mediaPlayer?.start()
+        mediaPlayer?.apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build()
+            )
+            isLooping = true
+            start()
+        }
     }
-
 
     //     VIBRAÇÃO APENAS NO SILENCIOSO / VIBRAR
 
@@ -99,23 +87,17 @@ class AlarmService : Service() {
 
         if (!isSilent) return
 
-        val pattern = longArrayOf(
-            0,
-            1500, 500,
-            1500, 500,
-            1500
-        )
+        val pattern = longArrayOf(0, 1000, 500)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator?.vibrate(
-                VibrationEffect.createWaveform(pattern, -1)
+                VibrationEffect.createWaveform(pattern, 0)
             )
         } else {
             @Suppress("DEPRECATION")
-            vibrator?.vibrate(pattern, -1)
+            vibrator?.vibrate(pattern, 0)
         }
     }
-
 
     //     NOTIFICAÇÃO
 
@@ -125,13 +107,13 @@ class AlarmService : Service() {
             putExtra(EXTRA_VOLUME_ML, volumeMl)
             flags =
                 Intent.FLAG_ACTIVITY_NEW_TASK or
-                        Intent.FLAG_ACTIVITY_SINGLE_TOP or
-                        Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP
         }
 
         val pendingIntent = PendingIntent.getActivity(
             this,
-            200,
+            0,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -142,12 +124,12 @@ class AlarmService : Service() {
             .setContentText("Beba $volumeMl ml agora!")
             .setCategory(Notification.CATEGORY_ALARM)
             .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setFullScreenIntent(pendingIntent, true)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setAutoCancel(false)
             .build()
     }
-
 
     //     CANAL DE NOTIFICAÇÃO
 
@@ -168,9 +150,8 @@ class AlarmService : Service() {
         manager?.createNotificationChannel(channel)
     }
 
-    // -------------------------------------------------------------
+
     //     LIMPEZA
-    // -------------------------------------------------------------
     private fun stopAlarmImmediately() {
         mediaPlayer?.stop()
         mediaPlayer?.release()

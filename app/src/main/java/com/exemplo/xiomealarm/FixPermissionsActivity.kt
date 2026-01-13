@@ -48,8 +48,47 @@ class FixPermissionsActivity : AppCompatActivity() {
         }
     }
 
+    private fun openAppSettings() {
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", packageName, null)
+        )
+        startActivity(intent)
+    }
 
 
+    private fun openXiaomiPopupPermission() {
+        try {
+            val intent = Intent("miui.intent.action.APP_PERM_EDITOR").apply {
+                setClassName(
+                    "com.miui.securitycenter",
+                    "com.miui.permcenter.permissions.PermissionsEditorActivity"
+                )
+                putExtra("extra_pkgname", packageName)
+            }
+            startActivity(intent)
+        } catch (e: Exception) {
+            startActivity(
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.parse("package:$packageName")
+                }
+            )
+        }
+    }
+
+    private fun openXiaomiAutostart() {
+        try {
+            val intent = Intent("miui.intent.action.OP_AUTO_START")
+            intent.addCategory(Intent.CATEGORY_DEFAULT)
+            startActivity(intent)
+        } catch (e: Exception) {
+            Toast.makeText(
+                this,
+                "No Xiaomi, ative também:\nAutoStart",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
 
 
     // isso detecta autostart apenas nos Xiaomi mais antigos
@@ -181,17 +220,11 @@ class FixPermissionsActivity : AppCompatActivity() {
         //  CONFIGURAÇÕES ESPECIAIS PARA XIAOMI / REDMI / POCO
 
         btnXiaomi.setOnClickListener {
-            try {
-                val intent = Intent("miui.intent.action.OP_AUTO_START")
-                intent.addCategory(Intent.CATEGORY_DEFAULT)
-                startActivity(intent)
-            } catch (e: Exception) {
-                Toast.makeText(
-                    this,
-                    "No Xiaomi, procure:\nConfigurações > Apps > Permissões > AutoStart",
-                    Toast.LENGTH_LONG
-                ).show()
+            btnXiaomi.setOnClickListener {
+                openXiaomiPopupPermission()
+                openXiaomiAutostart()
             }
+
         }
     }
 

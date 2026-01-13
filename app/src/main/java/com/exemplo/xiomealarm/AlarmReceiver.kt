@@ -18,17 +18,25 @@ class AlarmReceiver : BroadcastReceiver() {
         val intervalMs = intent.getLongExtra(AlarmService.EXTRA_INTERVAL_MS, 3600000L)
         val volumeMl = intent.getIntExtra(AlarmService.EXTRA_VOLUME_ML, 200)
 
-        // 1. INICIA O SERVIÇO EM FOREGROUND (para notificar e vibrar)
+        // 1. INICIA O SERVIÇO EM FOREGROUND
         val serviceIntent = Intent(context, AlarmService::class.java).apply {
             putExtra(AlarmService.EXTRA_INTERVAL_MS, intervalMs)
             putExtra(AlarmService.EXTRA_VOLUME_ML, volumeMl)
         }
         ContextCompat.startForegroundService(context, serviceIntent)
 
-        //  AGENDA O PRÓXIMO ALARME IMEDIATAMENTE.
-        // Se esta chamada não for feita, o alarme não dispara novamente.
+        // 2. ABRE A CONSUMEACTIVITY AUTOMATICAMENTE
+        val activityIntent = Intent(context, ConsumeActivity::class.java).apply {
+            putExtra(AlarmService.EXTRA_VOLUME_ML, volumeMl)
+            flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        context.startActivity(activityIntent)
+
+        // 3. AGENDA O PRÓXIMO ALARME
         scheduleNext(context, intervalMs, volumeMl)
-        Log.d("AlarmReceiver", "Próximo alarme agendado para $intervalMs ms.")
     }
 
     @SuppressLint("ScheduleExactAlarm")
@@ -41,9 +49,6 @@ class AlarmReceiver : BroadcastReceiver() {
             putExtra(AlarmService.EXTRA_INTERVAL_MS, intervalMs)
             putExtra(AlarmService.EXTRA_VOLUME_ML, volumeMl)
         }
-
-
-
 
         val pending = PendingIntent.getBroadcast(
             context,

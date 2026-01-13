@@ -25,13 +25,6 @@ class ConsumeActivity : AppCompatActivity() {
 
         val volumeMl = intent.getIntExtra(AlarmService.EXTRA_VOLUME_ML, 300)
 
-        // PARAR SOM / VIBRAÇÃO (para o serviço em foreground)
-        try {
-            val stopIntent = Intent(this, AlarmService::class.java).apply {
-                action = AlarmService.ACTION_STOP
-            }
-            startService(stopIntent)
-        } catch (_: Exception) {}
 
         val volumeTextView: TextView = findViewById(R.id.volumeTextView)
         val confirmButton: Button = findViewById(R.id.confirmButton)
@@ -41,11 +34,13 @@ class ConsumeActivity : AppCompatActivity() {
 
         confirmButton.setOnClickListener {
             registerConsumption(volumeMl)
+            stopAlarm()
             clearNotification()
             finish()
         }
 
         skipButton.setOnClickListener {
+            stopAlarm()
             clearNotification()
             finish()
         }
@@ -56,6 +51,12 @@ class ConsumeActivity : AppCompatActivity() {
         setIntent(intent)
     }
 
+    private fun stopAlarm() {
+        val stopIntent = Intent(this, AlarmService::class.java).apply {
+            action = AlarmService.ACTION_STOP
+        }
+        startService(stopIntent)
+    }
 
     private fun registerConsumption(volume: Int) {
         val current = prefs.getInt(KEY_TOTAL_CONSUMED_TODAY, 0)

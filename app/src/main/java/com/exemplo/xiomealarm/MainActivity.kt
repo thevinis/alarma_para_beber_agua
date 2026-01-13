@@ -211,7 +211,7 @@ class MainActivity : AppCompatActivity() {
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            System.currentTimeMillis() + intervalMs,
+            System.currentTimeMillis() + 60_000L,
             pendingIntent
         )
 
