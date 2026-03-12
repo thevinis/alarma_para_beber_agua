@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -19,11 +20,17 @@ class ConsumeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_consume)
 
         prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
         val volumeMl = intent.getIntExtra(AlarmService.EXTRA_VOLUME_ML, 300)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        }
 
 
         val volumeTextView: TextView = findViewById(R.id.volumeTextView)

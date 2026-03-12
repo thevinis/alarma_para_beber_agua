@@ -28,6 +28,12 @@
             android:layout_marginBottom="16dp"/>
 
         <Button
+            android:id="@+id/btnAutostart"
+            android:layout_width="363dp"
+            android:layout_height="wrap_content"
+            android:text="Permitir iniciar automaticamente" />
+
+        <Button
             android:id="@+id/btnPermAlarmes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

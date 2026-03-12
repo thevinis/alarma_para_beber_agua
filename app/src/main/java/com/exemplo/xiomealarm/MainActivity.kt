@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -21,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import android.content.pm.PackageManager
+import android.net.Uri
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,7 +56,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -81,8 +82,6 @@ class MainActivity : AppCompatActivity() {
 
         val filter = IntentFilter("com.exemplo.xiomealarm.ACTION_CONSUMPTION_UPDATED")
         registerReceiver(consumptionUpdateReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
-
-
     }
 
     private fun requestExactAlarmPermission() {

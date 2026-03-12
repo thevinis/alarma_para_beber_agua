@@ -18,14 +18,14 @@ class AlarmReceiver : BroadcastReceiver() {
         val intervalMs = intent.getLongExtra(AlarmService.EXTRA_INTERVAL_MS, 3600000L)
         val volumeMl = intent.getIntExtra(AlarmService.EXTRA_VOLUME_ML, 200)
 
-        // 1. INICIA O SERVIÇO EM FOREGROUND
+        //  INICIA O SERVIÇO EM FOREGROUND
         val serviceIntent = Intent(context, AlarmService::class.java).apply {
             putExtra(AlarmService.EXTRA_INTERVAL_MS, intervalMs)
             putExtra(AlarmService.EXTRA_VOLUME_ML, volumeMl)
         }
         ContextCompat.startForegroundService(context, serviceIntent)
 
-        // 2. ABRE A CONSUMEACTIVITY AUTOMATICAMENTE
+        /*//  ABRE A CONSUMEACTIVITY AUTOMATICAMENTE
         val activityIntent = Intent(context, ConsumeActivity::class.java).apply {
             putExtra(AlarmService.EXTRA_VOLUME_ML, volumeMl)
             flags =
@@ -33,9 +33,9 @@ class AlarmReceiver : BroadcastReceiver() {
                         Intent.FLAG_ACTIVITY_CLEAR_TOP or
                         Intent.FLAG_ACTIVITY_SINGLE_TOP
         }
-        context.startActivity(activityIntent)
+        context.startActivity(activityIntent)*/
 
-        // 3. AGENDA O PRÓXIMO ALARME
+        //  AGENDA O PRÓXIMO ALARME
         scheduleNext(context, intervalMs, volumeMl)
     }
 

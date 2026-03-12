@@ -24,6 +24,24 @@ class FixPermissionsActivity : AppCompatActivity() {
     private lateinit var btnBackground: Button
     private lateinit var btnXiaomi: Button
 
+
+
+    private fun checkOverlayPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if (!Settings.canDrawOverlays(this)) {
+
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:$packageName")
+                )
+
+                startActivity(intent)
+            }
+        }
+    }
+
     private fun isBackgroundAllowed(): Boolean {
 
         val pm = getSystemService(PowerManager::class.java)
@@ -151,6 +169,8 @@ class FixPermissionsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fix_permissions)
+
+        checkOverlayPermission()
 
         btnNotificacao = findViewById(R.id.btnPermNotificacoes)
         btnAlarmeExato = findViewById(R.id.btnPermAlarmes)

@@ -29,6 +29,21 @@ class AlarmService : Service() {
 
     private var mediaPlayer: MediaPlayer? = null
 
+    private fun openConsumeActivity() {
+
+        val intent = Intent(this, ConsumeActivity::class.java).apply {
+
+            putExtra(EXTRA_VOLUME_ML, volumeMl)
+
+            flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+
+        startActivity(intent)
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent == null) return START_NOT_STICKY
 
@@ -43,6 +58,8 @@ class AlarmService : Service() {
 
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, buildNotification())
+
+        openConsumeActivity()
 
         playAlarmSoundIfAllowed()
         startVibrationIfSilent()
@@ -141,9 +158,15 @@ class AlarmService : Service() {
             "Lembrete de Água",
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            enableVibration(false)
-            vibrationPattern = null
+            /*enableVibration(false)
+            vibrationPattern = null*/
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+
+            setBypassDnd(true)
+
+            enableLights(true)
+
+            enableVibration(false)
         }
 
         val manager = getSystemService(NotificationManager::class.java)
