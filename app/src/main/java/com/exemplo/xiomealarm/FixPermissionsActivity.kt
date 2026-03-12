@@ -24,6 +24,8 @@ class FixPermissionsActivity : AppCompatActivity() {
     private lateinit var btnBackground: Button
     private lateinit var btnXiaomi: Button
 
+    private lateinit var btnAutostart: Button
+
 
 
     private fun checkOverlayPermission() {
@@ -44,26 +46,14 @@ class FixPermissionsActivity : AppCompatActivity() {
 
     private fun isBackgroundAllowed(): Boolean {
 
-        val pm = getSystemService(PowerManager::class.java)
-
-        // 1. Android padrão
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (pm.isIgnoringBatteryOptimizations(packageName)) {
-                return true
-            }
+
+            val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+
+            return pm.isIgnoringBatteryOptimizations(packageName)
         }
 
-        // 2. Caso especial: MIUI ignora o valor acima
-        //    Aqui verificamos se o app está com "Sem restrições"
-        return try {
-            val intent = Intent("miui.intent.action.POWER_HIDE_MODE_APP_LIST").apply {
-                addCategory(Intent.CATEGORY_DEFAULT)
-                setPackage("com.miui.powerkeeper")
-            }
-            packageManager.queryIntentActivities(intent, 0).isNotEmpty()
-        } catch (e: Exception) {
-            false
-        }
+        return true
     }
 
     private fun openAppSettings() {
@@ -168,84 +158,67 @@ class FixPermissionsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_fix_permissions)
 
         checkOverlayPermission()
 
+        // Inicializar botões
         btnNotificacao = findViewById(R.id.btnPermNotificacoes)
         btnAlarmeExato = findViewById(R.id.btnPermAlarmes)
         btnBackground = findViewById(R.id.btnPermBackground)
         btnXiaomi = findViewById(R.id.btnPermXiaomi)
+        btnAutostart = findViewById(R.id.btnAutostart)
 
-
-        //  PERMISSÃO DE NOTIFICAÇÕES
-
+        // NOTIFICAÇÕES
         btnNotificacao.setOnClickListener {
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
                 if (ContextCompat.checkSelfPermission(
                         this,
                         Manifest.permission.POST_NOTIFICATIONS
                     ) == PackageManager.PERMISSION_GRANTED
                 ) {
-                    Toast.makeText(this, "Permissão de Notificação já concedida.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Permissão já concedida", Toast.LENGTH_SHORT).show()
                 } else {
                     requestNotificationPerm.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
-            } else {
-                Toast.makeText(this, "Esta versão do Android não precisa dessa permissão.", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        // ALARMES EXATOS
+        btnAlarmeExato.setOnClickListener {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+
+                val alarmManager = getSystemService(AlarmManager::class.java)
+
+                if (!alarmManager.canScheduleExactAlarms()) {
+                    startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+                }
+            }
+        }
+
+        // BACKGROUND
+        btnBackground.setOnClickListener {
+
+            startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
+        }
+
+        // XIAOMI PERMISSÕES
+        btnXiaomi.setOnClickListener {
+
+            openXiaomiPopupPermission()
+        }
+
+        // AUTOSTART
+        btnAutostart.setOnClickListener {
+
+            openXiaomiAutostart()
         }
 
         refreshPermissionStatus()
-
-
-        //  PERMISSÃO DE ALARMES EXATOS
-
-        btnAlarmeExato.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val alarmManager = getSystemService(AlarmManager::class.java)
-                if (!alarmManager.canScheduleExactAlarms()) {
-                    try {
-                        startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
-                    } catch (e: Exception) {
-                        Toast.makeText(
-                            this,
-                            "Não foi possível abrir a tela de permissão.",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                } else {
-                    Toast.makeText(this, "Permissão de alarme exato já concedida.", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                Toast.makeText(this, "Seu Android não exige essa permissão.", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-
-        //  PERMISSÃO DE EXECUTAR EM SEGUNDO PLANO
-
-        btnBackground.setOnClickListener {
-            try {
-                val intent = Intent().apply {
-                    action = Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
-                }
-                startActivity(intent)
-            } catch (e: Exception) {
-                Toast.makeText(this, "Abra manualmente: Configurações > Bateria > Sem restrições", Toast.LENGTH_LONG).show()
-            }
-        }
-
-
-        //  CONFIGURAÇÕES ESPECIAIS PARA XIAOMI / REDMI / POCO
-
-        btnXiaomi.setOnClickListener {
-            btnXiaomi.setOnClickListener {
-                openXiaomiPopupPermission()
-                openXiaomiAutostart()
-            }
-
-        }
     }
 
     override fun onResume() {
