@@ -59,7 +59,7 @@ class AlarmService : Service() {
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, buildNotification())
 
-        openConsumeActivity()
+        //openConsumeActivity()
 
         playAlarmSoundIfAllowed()
         startVibrationIfSilent()

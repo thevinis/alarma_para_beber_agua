@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     private fun setupIntervalPicker() {
-        val intervalLabels = arrayOf("1h", "1h 30m", "2h", "2h 30m", "3h")
+        val intervalLabels = arrayOf("1h", "2h", "3h")
         intervalPicker.minValue = 0
         intervalPicker.maxValue = intervalLabels.size - 1
         intervalPicker.displayedValues = intervalLabels

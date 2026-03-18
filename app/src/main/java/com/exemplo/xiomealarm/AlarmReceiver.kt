@@ -25,17 +25,6 @@ class AlarmReceiver : BroadcastReceiver() {
         }
         ContextCompat.startForegroundService(context, serviceIntent)
 
-        /*//  ABRE A CONSUMEACTIVITY AUTOMATICAMENTE
-        val activityIntent = Intent(context, ConsumeActivity::class.java).apply {
-            putExtra(AlarmService.EXTRA_VOLUME_ML, volumeMl)
-            flags =
-                Intent.FLAG_ACTIVITY_NEW_TASK or
-                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                        Intent.FLAG_ACTIVITY_SINGLE_TOP
-        }
-        context.startActivity(activityIntent)*/
-
-        //  AGENDA O PRÓXIMO ALARME
         scheduleNext(context, intervalMs, volumeMl)
     }
 
